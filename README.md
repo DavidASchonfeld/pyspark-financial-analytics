@@ -24,6 +24,19 @@ Adds derived fields — such as filing quarter, days since filing, and a human-r
 **Step 6 — Join Companies & Filings**
 Links each filing record to its corresponding company metadata (name, ticker, industry) using an efficient broadcast join, producing a single unified table ready for querying.
 
+**Step 7 — Window Functions**
+Answers questions like "what is the most recent filing for each company?" using a technique called window functions. Unlike GROUP BY functions (which discard details to produce totals), window functions let each record keep all of its original information while also gaining a rank, a running count, or any other comparison relative to its group.
+
+**Step 8 — GroupBy Aggregation**
+Ranks companies by how frequently they file with the SEC, producing a leaderboard-style summary with metrics like total filings, how many distinct form types they submitted, and how far back their filing history goes.
+
+**Step 9 — Pure SQL in Spark**
+Re-expresses the Step 8 aggregation using standard SQL instead of the PySpark DataFrame API — producing identical results. Spark lets you register any DataFrame as a temporary SQL view and query it just like a database table, which is useful for collaborating with SQL-first teammates, situations, etc.
+
+**Step 10 — Saving to Disk (Partitioned Parquet)**
+Writes the final dataset to disk in Parquet format — the industry-standard file format used across data engineering. Unlike a CSV, Parquet stores data column-by-column, compresses repeated values automatically, and supports *partitioning*: physically splitting the output into separate folders (one per filing year) so that future queries touching only one year never read the others. I also demonstrate *partition pruning* — the automatic performance boost where Spark skips irrelevant folders entirely before reading a single file — and verify it is working by inspecting Spark's internal execution plan with `.explain()`.
+
+
 ## Tech Stack
 
 - **PySpark** — distributed data processing
