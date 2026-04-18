@@ -1,2 +1,6 @@
 # IDE settings — kept local to each developer's machine
 .vscode/
+
+# Environment variables — contains machine-specific paths (e.g. JAVA_HOME) that differ per developer
+# Use .env.example as the committed template; never commit .env itself
+.env
